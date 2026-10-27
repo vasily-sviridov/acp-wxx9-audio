@@ -1,0 +1,11 @@
+# never commit secrets or machine-specific artifacts
+mok/*
+!mok/mok.cnf
+
+# decompressed / re-signed working images
+*.ko
+*.zst
+*.orig
+
+# local test artifacts
+*.wav

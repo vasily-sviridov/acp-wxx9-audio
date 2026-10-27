@@ -1,0 +1,19 @@
+# debian/Ubuntu MOK key template used to sign patched modules on this laptop.
+# Regenerate your own: see README.md, section "Signing".
+
+[ req ]
+default_bits        = 4096
+default_keyfile     = privkey.pem
+default_md          = sha512
+distinguished_name  = dn
+x509_extensions     = v3
+prompt              = no
+string_mask         = utf8only
+
+[ dn ]
+CN = "Local MOK snd-acp-wxx9-audio"
+O  = Local
+
+[ v3 ]
+basicConstraints = critical,CA:TRUE
+keyUsage         = digitalSignature, keyCertSign
