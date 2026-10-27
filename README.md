@@ -37,10 +37,15 @@ sudo mokutil --import mok/mok.der
 sudo reboot    # blue-screen MokManager: Enroll MOK -> Continue -> Yes -> password -> Reboot
 
 # patch + sign the sound modules of every installed kernel
-sudo ./huawei-audio-patch.sh
+sudo mkdir -p /usr/local/lib/huawei-audio-patch
+sudo install -m 755 bytepatch.py huawei-audio-patch.sh /usr/local/lib/huawei-audio-patch/
+sudo cp -R mok /usr/local/lib/huawei-audio-patch/mok        # your MOK key lives here
+sudo chown -R root:root /usr/local/lib/huawei-audio-patch
+sudo chmod 600 /usr/local/lib/huawei-audio-patch/mok/mok.priv
+sudo ln -sf /usr/local/lib/huawei-audio-patch/huawei-audio-patch.sh /usr/local/sbin/huawei-audio-patch
+sudo huawei-audio-patch
 
 # survive kernel updates
-sudo install -m 755 huawei-audio-patch.sh /usr/local/sbin/huawei-audio-patch
 sudo tee /etc/kernel/postinst.d/zz-huawei-audio-patch >/dev/null <<'EOF'
 #!/bin/sh
 exec /usr/local/sbin/huawei-audio-patch "$@"
@@ -184,6 +189,7 @@ sudo mv /usr/lib/modules/$(uname -r)/kernel/sound/soc/amd/snd-acp-config.ko.zst.
 sudo mv /usr/lib/modules/$(uname -r)/kernel/sound/soc/amd/acp/snd-acp-legacy-mach.ko.zst.orig \
         /usr/lib/modules/$(uname -r)/kernel/sound/soc/amd/acp/snd-acp-legacy-mach.ko.zst
 sudo rm -f /etc/kernel/postinst.d/zz-huawei-audio-patch /usr/local/sbin/huawei-audio-patch
+sudo rm -rf /usr/local/lib/huawei-audio-patch
 sudo reboot
 ```
 
